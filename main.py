@@ -1,17 +1,18 @@
-from MAB import MultiArmedBandit
+from SoftMaxMAB import SoftmaxMAB
+import matplotlib.pyplot as plt
 
+true_arm_rewards = [0.4, 0.8, 0.4]
+true_arm_stds = []
+beliefs = [0, 0, 0]
+number_of_rounds = 10
+tau = 10
+alpha = 0.5
 
 if __name__ == '__main__':
-    num_arms = 5
-    num_rounds = 1000
-    mean_rewards = [1, 2, 3, 4, 5]
-    std_dev_rewards = [0, 3, 2, 1, 4]
-    tau = 0.6
-
-    bandit = MultiArmedBandit(num_arms, mean_rewards, std_dev_rewards, tau)
-    true_mean_rewards, estimated_mean_rewards, total_reward = bandit.play(num_rounds)
-
-    print("True mean rewards:", true_mean_rewards)
-    print("Estimated mean rewards:", estimated_mean_rewards)
-    print("Total reward obtained:", total_reward)
-
+    bandit = SoftmaxMAB(true_arm_rewards, alpha, tau)
+    final_beliefs, total_reward, accumulated_reward = bandit.play(number_of_rounds)
+    plt.plot(range(number_of_rounds), accumulated_reward)
+    plt.xlabel("Round")
+    plt.ylabel("Accumulated Reward")
+    plt.title(f"Accumulated Reward per Round, Tau = {tau}")
+    plt.show()
