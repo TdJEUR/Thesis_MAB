@@ -1,16 +1,17 @@
-# This is a sample Python script.
-
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+from MAB import MultiArmedBandit
 
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
-
-
-# Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    print_hi('PyCharm')
+    num_arms = 5
+    num_rounds = 1000
+    mean_rewards = [1, 2, 3, 4, 5]
+    std_dev_rewards = [0, 3, 2, 1, 4]
+    tau = 0.6
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+    bandit = MultiArmedBandit(num_arms, mean_rewards, std_dev_rewards, tau)
+    true_mean_rewards, estimated_mean_rewards, total_reward = bandit.play(num_rounds)
+
+    print("True mean rewards:", true_mean_rewards)
+    print("Estimated mean rewards:", estimated_mean_rewards)
+    print("Total reward obtained:", total_reward)
+
