@@ -19,9 +19,9 @@ class TeamMember:
 
     def update_beliefs(self, choice, reward):
         # Update beliefs due to last obtained reward using exponential smoothing
-        self.belief[choice] += ((1-self.alpha)*self.belief[choice])+(self.alpha*reward)
-        # self.belief[choice] += self.alpha * (reward - self.belief[choice])
-        print(f"Belief: {self.belief}")
+        # self.belief[choice] += ((1-self.alpha)*self.belief[choice])+(self.alpha*reward)
+        self.belief[choice] += self.alpha * (reward - self.belief[choice])
+        # print(f"Belief: {self.belief}")
 
 
 def create_team(alphas, tau, no_arms):
@@ -51,7 +51,7 @@ class MAB:
 
     def __init__(self, true_arm_rewards):
         # Initialize the MAB by inputting the true rewards of each arm
-        self.pulls_per_arm = {i: 0 for i in range(1, len(true_arm_rewards)+1)}
+        # self.pulls_per_arm = {i: 0 for i in range(1, len(true_arm_rewards)+1)}
         self.choices = []
         self.accumulated_rewards = []
         self.total_reward = 0

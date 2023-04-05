@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 
 true_arm_rewards = [0.4, 0.8, 0.4, 0.3]
 # true_arm_stds = []
-number_of_rounds = 100
+number_of_rounds = 50
 tau = 0.5
 alpha = 0.5
 
