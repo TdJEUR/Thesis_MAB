@@ -18,8 +18,10 @@ class TeamMember:
         self.choice_probabilities = softmax_belief_to_prob(self.belief, self.tau)
 
     def update_beliefs(self, choice, reward):
-        # Update beliefs due to last obtained reward
-        self.belief[choice] += self.alpha * (reward-self.belief[choice])
+        # Update beliefs due to last obtained reward using exponential smoothing
+        self.belief[choice] += ((1-self.alpha)*self.belief[choice])+(self.alpha*reward)
+        # self.belief[choice] += self.alpha * (reward - self.belief[choice])
+        print(f"Belief: {self.belief}")
 
 
 def create_team(alphas, tau, no_arms):
@@ -58,6 +60,7 @@ class MAB:
     def play_round(self, choice):
         # Obtain a reward from the MAB depending on the chosen arm
         reward = self.true_arm_rewards[choice]
+        print(f"Reward obtained: {reward}")
         self.total_reward += reward
         self.accumulated_rewards.append(self.total_reward)
         # Update list of all choices (keep track of distribution of choices)
@@ -82,9 +85,16 @@ def team_MAB(alphas, tau, true_arm_rewards, number_of_rounds):
     # Create Team model
     team = create_team(alphas, tau, number_of_arms)
     # At each new round:
-    for i in range(number_of_rounds):
+    for i in range(1,number_of_rounds+1):
+        print(f"\nStarting round {i}")
+        # Generate individual choice probabilities
+        print("Generating individual choice probabilities for each team member:")
+        for j, member in enumerate(team, 1):
+            member.get_choice_probabilities()
+            print(f"Member {j}\nbelief: {member.belief}\nchoice prob: {member.choice_probabilities}")
         # Generate team choice probabilities
         team_choice_prob = generate_team_choice_prob(team)
+        print(f"Team choice prob: {team_choice_prob}")
         # Generate which arm is chosen out of the probabilities
         choice = np.random.choice(list(range(number_of_arms)), p=team_choice_prob)
         # Play a round depending on the choice
