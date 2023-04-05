@@ -1,5 +1,5 @@
 from Team_Based_MAB import team_MAB
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 
 
 # ----------------------------------------------------------------------------------------------------------------------
@@ -18,4 +18,3 @@ tau = 0.5
 
 if __name__ == '__main__':
     team_MAB(alphas, tau, true_arm_rewards, number_of_rounds)
-

@@ -85,7 +85,7 @@ def team_MAB(alphas, tau, true_arm_rewards, number_of_rounds):
     # Create Team model
     team = create_team(alphas, tau, number_of_arms)
     # At each new round:
-    for i in range(1,number_of_rounds+1):
+    for i in range(1, number_of_rounds+1):
         print(f"\nStarting round {i}")
         # Generate individual choice probabilities
         print("Generating individual choice probabilities for each team member:")
