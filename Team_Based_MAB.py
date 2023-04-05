@@ -108,3 +108,4 @@ def team_MAB(alphas, tau, true_arm_rewards, number_of_rounds):
             # print(f"Updated belief: {member.belief}")
     final_cd = mab.get_choices_distribution()
     print(f"Distribution of picked arms: {final_cd}")
+    return mab.accumulated_rewards
