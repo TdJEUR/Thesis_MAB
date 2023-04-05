@@ -36,7 +36,7 @@ class SoftmaxMAB:
         self.total_reward += reward
         self.accumulated_rewards.append(self.total_reward)
         # Update beliefs
-        self.beliefs[choice] += self.alpha * (reward - self.beliefs[choice])
+        self.beliefs[choice] += self.alpha*(reward-self.beliefs[choice])
 
     def play(self, number_of_rounds):
         for i in range(number_of_rounds):
