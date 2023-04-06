@@ -37,10 +37,19 @@ def generate_team_choice_prob(team):
     # team choice probability. assumes that the options are independent of
     # each other and that the probabilities are accurate
     probabilities = [member.choice_probabilities for member in team]
-    combined_prob = [1.0] * len(probabilities[0])
-    for p in probabilities:
-        for i, option_prob in enumerate(p):
-            combined_prob[i] *= option_prob
+    # combined_prob = [1.0] * len(probabilities[0])
+    # for p in probabilities:
+    #     for i, option_prob in enumerate(p):
+    #         combined_prob[i] *= option_prob
+    # total_prob = sum(combined_prob)
+    # return [p / total_prob for p in combined_prob]
+
+    weights = [1.0 / len(probabilities)] * len(probabilities)
+    assert len(probabilities) == len(weights)
+    combined_prob = [0.0] * len(probabilities[0])
+    for i in range(len(combined_prob)):
+        for j in range(len(probabilities)):
+            combined_prob[i] += weights[j] * probabilities[j][i]
     total_prob = sum(combined_prob)
     return [p / total_prob for p in combined_prob]
 
@@ -52,17 +61,31 @@ class MAB:
     def __init__(self, true_arm_rewards):
         # Initialize the MAB by inputting the true rewards of each arm
         # self.pulls_per_arm = {i: 0 for i in range(1, len(true_arm_rewards)+1)}
+        self.true_arm_rewards = true_arm_rewards
         self.choices = []
         self.accumulated_rewards = []
+        self.accumulated_regret = []
+        self.rate_of_best_reward = []
         self.total_reward = 0
-        self.true_arm_rewards = true_arm_rewards
+        self.total_regret = 0
+        self.number_of_best_arm_pulls = 0
+        self.round = 0
 
     def play_round(self, choice):
+        # Update round number
+        self.round += 1
         # Obtain a reward from the MAB depending on the chosen arm
         reward = self.true_arm_rewards[choice]
         print(f"Reward obtained: {reward}")
         self.total_reward += reward
         self.accumulated_rewards.append(self.total_reward)
+        # Update regret
+        self.total_regret += max(self.true_arm_rewards)-reward
+        self.accumulated_regret.append(self.total_regret)
+        # Update list of rate_of_best_reward (keep track of % best choice made)
+        if reward == max(self.true_arm_rewards):
+            self.number_of_best_arm_pulls += 1
+        self.rate_of_best_reward.append(self.number_of_best_arm_pulls/self.round)
         # Update list of all choices (keep track of distribution of choices)
         self.choices.append(choice)
         return reward
@@ -108,4 +131,4 @@ def team_MAB(alphas, tau, true_arm_rewards, number_of_rounds):
             # print(f"Updated belief: {member.belief}")
     final_cd = mab.get_choices_distribution()
     print(f"Distribution of picked arms: {final_cd}")
-    return mab.accumulated_rewards
+    return mab.accumulated_rewards, mab.rate_of_best_reward, mab.accumulated_regret
