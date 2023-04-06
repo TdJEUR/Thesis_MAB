@@ -1,65 +1,45 @@
-from Team_Based_MAB import team_MAB
+from Create_Team_and_MAB import create_team, create_MAB
+from Team_choice_probability import generate_team_choice_prob
 import numpy as np
-import matplotlib.pyplot as plt
 
 
-# ----------------------------------------------------------------------------------------------------------------------
-# Team Based MAB
-# ----------------------------------------------------------------------------------------------------------------------
-
-# MAB variables
-true_arm_rewards = [0.1, 0.8, 0.1]
-# number_of_arms = len(true_arm_rewards)
-number_of_rounds = 50
-# true_arm_stds = []
-
-# Team variables
-alphas = [0.5, 0.5, 0.5, 0.5]
-# tau = 0.9
-
-
-def simulate_different_taus():
-    # Run simulation with constant alpha and different values of tau
-    acc_rewards = []
-    rate_of_best_rewards = []
-    acc_regret = []
-    for i in np.linspace(0.01, 2, num=5):
-        res = team_MAB(alphas, i, true_arm_rewards, number_of_rounds)
-        acc_rewards.append(res[0])
-        rate_of_best_rewards.append(res[1])
-        acc_regret.append(res[2])
-    # Plot results
-    fig, axs = plt.subplots(nrows=2, ncols=2, figsize=(10, 8))
-    # fig.subplots_adjust(hspace=0.4, wspace=0.3)
-    axs[0, 0].plot(range(number_of_rounds), acc_rewards[0], label='Tau: 0.01')
-    axs[0, 0].plot(range(number_of_rounds), acc_rewards[1], label='Tau: 0.5')
-    axs[0, 0].plot(range(number_of_rounds), acc_rewards[2], label='Tau: 1.0')
-    axs[0, 0].plot(range(number_of_rounds), acc_rewards[3], label='Tau: 1.5')
-    axs[0, 0].plot(range(number_of_rounds), acc_rewards[4], label='Tau: 2.0')
-    axs[0, 0].set_xlabel('Round number')
-    axs[0, 0].set_ylabel('Accumulated reward')
-    axs[0, 0].set_title('Accumulated reward over time')
-    axs[0, 0].legend()
-    axs[0, 1].plot(range(number_of_rounds), rate_of_best_rewards[0], label='Tau: 0.01')
-    axs[0, 1].plot(range(number_of_rounds), rate_of_best_rewards[1], label='Tau: 0.5')
-    axs[0, 1].plot(range(number_of_rounds), rate_of_best_rewards[2], label='Tau: 1.0')
-    axs[0, 1].plot(range(number_of_rounds), rate_of_best_rewards[3], label='Tau: 1.5')
-    axs[0, 1].plot(range(number_of_rounds), rate_of_best_rewards[4], label='Tau: 2.0')
-    axs[0, 1].set_xlabel('Round number')
-    axs[0, 1].set_ylabel('Rate of best rewards')
-    axs[0, 1].set_title('Rate of best rewards over time')
-    axs[0, 1].legend()
-    axs[1, 0].plot(range(number_of_rounds), acc_regret[0], label='Tau: 0.01')
-    axs[1, 0].plot(range(number_of_rounds), acc_regret[1], label='Tau: 0.5')
-    axs[1, 0].plot(range(number_of_rounds), acc_regret[2], label='Tau: 1.0')
-    axs[1, 0].plot(range(number_of_rounds), acc_regret[3], label='Tau: 1.5')
-    axs[1, 0].plot(range(number_of_rounds), acc_regret[4], label='Tau: 2.0')
-    axs[1, 0].set_xlabel('Round number')
-    axs[1, 0].set_ylabel('Accumulated regret')
-    axs[1, 0].set_title('Accumulated regret over time')
-    axs[1, 0].legend()
-    fig.tight_layout()
-    plt.show()
+def team_MAB(alphas, tau, true_arm_rewards, number_of_rounds):
+    """ Simulate a team consisting of members defined by alphas (list containing alpha
+    for each member) playing a MAB with rewards corresponding to true_arm_rewards (list
+    containing reward of each arm) for a certain number_of_rounds (integer). The exploration-
+    exploitation strategy the team takes is defined by tau (float) """
+    number_of_arms = len(true_arm_rewards)
+    # Create MAB model
+    mab = create_MAB(true_arm_rewards)
+    # Create Team model
+    team = create_team(alphas, tau, number_of_arms)
+    # Loop through the rounds:
+    for i in range(1, number_of_rounds+1):
+        # print(f"\nStarting round {i}")
+        # Generate individual choice probabilities
+        # print("Generating individual choice probabilities for each team member:")
+        for j, member in enumerate(team, 1):
+            member.get_choice_probabilities()
+            # print(f"Member {j}\nbelief: {member.belief}\nchoice prob: {member.choice_probabilities}")
+        # Generate team choice probabilities
+        team_choice_prob = generate_team_choice_prob(team)
+        # print(f"Team choice prob: {team_choice_prob}")
+        # Generate which arm is chosen out of the probabilities
+        choice = np.random.choice(list(range(number_of_arms)), p=team_choice_prob)
+        # Play a round depending on the choice
+        reward = mab.play_round(choice)
+        # cd = mab.get_choices_distribution()
+        # print(f"Python index of picked arm: {choice}")
+        # print(f"Distribution of picked arms: {cd}")
+        # Update beliefs of all team members
+        for member in team:
+            member.update_beliefs(choice, reward)
+            # print(f"Updated belief: {member.belief}")
+    final_cd = mab.get_choices_distribution()
+    print(f"Distribution of picked arms: {final_cd}")
+    return mab.accumulated_rewards, mab.rate_of_best_reward, mab.accumulated_regret
 
 
-simulate_different_taus()
+
+
+

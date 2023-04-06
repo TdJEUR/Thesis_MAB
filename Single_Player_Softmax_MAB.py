@@ -1,4 +1,22 @@
+import matplotlib.pyplot as plt
 import numpy as np
+
+
+""" Simulate a single player playing a MAB with rewards for each arm 
+corresponding to true_arm_rewards (list) for a certain number_of_rounds 
+(int). The player's verbosity is defined by alpha (float) and their 
+exploration-exploitation strategy is defined by tau (float). To use this
+script simply input the desired values below and press run """
+
+
+# MAB Values:
+true_arm_rewards = [0.4, 0.8, 0.4, 0.3]
+number_of_rounds = 50
+# true_arm_stds = []
+
+# Team Values
+tau = 0.5
+alpha = 0.5
 
 
 class SoftmaxMAB:
@@ -46,3 +64,13 @@ class SoftmaxMAB:
         print(f"Beliefs: {self.beliefs}\nTotal Reward: {self.total_reward}")
         print(f"Distribution of picked arms: {dict(choices_)}")
         return self.beliefs, self.total_reward, self.accumulated_rewards
+
+
+if __name__ == '__main__':
+    bandit = SoftmaxMAB(true_arm_rewards, alpha, tau)
+    final_beliefs, total_reward, accumulated_reward = bandit.play(number_of_rounds)
+    plt.plot(range(number_of_rounds), accumulated_reward)
+    plt.xlabel("Round")
+    plt.ylabel("Accumulated Reward")
+    plt.title(f"Accumulated Reward per Round, Tau = {tau}")
+    plt.show()
