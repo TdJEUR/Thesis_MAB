@@ -5,7 +5,9 @@ def plot_results(number_of_rounds, tau, acc_rewards, rate_of_best_rewards, acc_r
     """ Create plots of the accumulated reward, accumulated regret and
     rate of choosing the best reward against the round number for
     different values of tau """
+    # Create a new figure and a set of subplots for the plots
     fig, axs = plt.subplots(nrows=2, ncols=2, figsize=(10, 8))
+    # Loop through each value of tau and create plots for each metric
     for i, tau in enumerate(tau):
         axs[0, 0].plot(range(number_of_rounds), acc_rewards[i], label=f'Tau: {tau}')
         axs[0, 0].set_xlabel('Round number')

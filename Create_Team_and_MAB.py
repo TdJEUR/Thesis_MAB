@@ -1,4 +1,5 @@
 from Softmax import softmax_belief_to_prob
+import numpy as np
 
 
 def create_team(alphas, tau, no_arms):
@@ -12,10 +13,10 @@ def create_team(alphas, tau, no_arms):
     return team
 
 
-def create_MAB(true_arm_rewards):
+def create_MAB(true_arm_rewards, true_arm_stds):
     """ Create an MAB object that simulates a MAB with rewards corresponding to
     true_arm_rewards (list containing reward of each arm) """
-    return MAB(true_arm_rewards)
+    return MAB(true_arm_rewards, true_arm_stds)
 
 
 class TeamMember:
@@ -46,10 +47,11 @@ class TeamMember:
 
 class MAB:
 
-    def __init__(self, true_arm_rewards):
+    def __init__(self, true_arm_rewards, true_arm_stds):
         """ Initialize a MAB by inputting the true rewards of each arm
         in true_arm_rewards (list containing reward of each arm) """
         self.true_arm_rewards = true_arm_rewards
+        self.true_arm_stds = true_arm_stds
         self.choices = []
         self.accumulated_rewards = []
         self.accumulated_regret = []
@@ -69,7 +71,9 @@ class MAB:
         # Update round number
         self.round += 1
         # Obtain a reward from the MAB depending on the chosen arm
-        reward = self.true_arm_rewards[choice]
+        mean = self.true_arm_rewards[choice]
+        std = self.true_arm_stds[choice]
+        reward = np.random.normal(loc=mean, scale=std)
         self.total_reward += reward
         self.accumulated_rewards.append(self.total_reward)
         # Update regret
