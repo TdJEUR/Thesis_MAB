@@ -1,9 +1,9 @@
 from Run_Team_MAB import team_MAB
-from Plot_results import plot_results
+from Plot_Results import plot_results
 import numpy as np
 
 
-""" Simulate a team player playing a MAB with rewards for each arm 
+""" Simulate a team playing a MAB with rewards for each arm 
 corresponding to true_arm_rewards (list) for a certain number_of_rounds 
 (int). The verbosity of each team member is defined by alphas (list of
 floats). The exploration-exploitation strategy of the team is defined 
@@ -27,13 +27,13 @@ def simulate_different_taus():
     acc_rewards = []
     rate_of_best_rewards = []
     acc_regret = []
-    for i in tau:
-        res = team_MAB(alphas, i, true_arm_rewards, number_of_rounds)
+    for j in tau:
+        res = team_MAB(alphas, j, true_arm_rewards, number_of_rounds)
         acc_rewards.append(res[0])
         rate_of_best_rewards.append(res[1])
         acc_regret.append(res[2])
     # Plot results
-    plot_results(number_of_rounds, acc_rewards, rate_of_best_rewards, acc_regret)
+    plot_results(number_of_rounds, tau, acc_rewards, rate_of_best_rewards, acc_regret)
 
 
 if __name__ == '__main__':

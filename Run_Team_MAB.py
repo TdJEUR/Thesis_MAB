@@ -1,5 +1,5 @@
 from Create_Team_and_MAB import create_team, create_MAB
-from Team_choice_probability import generate_team_choice_prob
+from Team_Choice_Probability import generate_team_choice_prob
 import numpy as np
 
 
@@ -36,10 +36,5 @@ def team_MAB(alphas, tau, true_arm_rewards, number_of_rounds):
             member.update_beliefs(choice, reward)
             # print(f"Updated belief: {member.belief}")
     final_cd = mab.get_choices_distribution()
-    print(f"Distribution of picked arms: {final_cd}")
+    # print(f"Distribution of picked arms: {final_cd}")
     return mab.accumulated_rewards, mab.rate_of_best_reward, mab.accumulated_regret
-
-
-
-
-
