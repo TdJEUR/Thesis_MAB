@@ -14,7 +14,7 @@ true_arm_rewards = [0.4, 0.8, 0.4, 0.3]
 number_of_rounds = 50
 # true_arm_stds = []
 
-# Team Values
+# PLayer Values
 tau = 0.5
 alpha = 0.5
 

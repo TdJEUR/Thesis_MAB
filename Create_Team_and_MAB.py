@@ -80,7 +80,7 @@ class MAB:
         self.total_regret += max(self.true_arm_rewards)-reward
         self.accumulated_regret.append(self.total_regret)
         # Update list of rate_of_best_reward (keep track of % best choice made)
-        if reward == max(self.true_arm_rewards):
+        if mean == max(self.true_arm_rewards):
             self.number_of_best_arm_pulls += 1
         self.rate_of_best_reward.append(self.number_of_best_arm_pulls/self.round)
         # Update list of all choices (keep track of distribution of choices)

@@ -5,7 +5,8 @@ import numpy as np
 
 
 # MAB variables
-true_arm_rewards = [0.1, 0.1, 0.1, 0.1, 0.9]
+true_arm_rewards = [0.2, 0.4, 0.4, 0.7, 0.9]
+# true_arm_stds = [0.4, 0.3, 0.1, 0.3, 0.6]
 true_arm_stds = [0, 0, 0, 0, 0]
 number_of_rounds = 200
 
@@ -15,7 +16,7 @@ alphas = [0.5, 0.5, 0.5, 0.5]
 taus = np.linspace(0.1, 0.5, num=5)
 
 # Simulation variables
-num_sims = 500
+num_sims = 100
 
 
 def simulate_different_taus():
