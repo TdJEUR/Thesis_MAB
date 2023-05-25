@@ -1,3 +1,18 @@
+import numpy as np
+
+
+def softmax_belief_to_prob(beliefs, tau):
+    """ Implementation of the Softmax choice rule: Input the
+    player's current beliefs and output their choice probabilities """
+    choice_probabilities = []
+    # Calculate the denominator of the Softmax formula
+    denominator = sum(np.exp(i/(tau/len(beliefs))) for i in beliefs)
+    # Loop through each belief and calculate its corresponding choice probability
+    for belief in beliefs:
+        choice_probabilities.append(round((np.exp(belief/(tau/len(beliefs)))/denominator), 10))
+    return choice_probabilities
+
+
 def vertical_avg(lst):
     """Calculates the vertical average of a three-dimensional list. Given a three-dimensional
     list `lst` of shape (num_sub_lists, num_sub_sub_lists, n), where n represents the number

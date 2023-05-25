@@ -54,5 +54,9 @@ To utilise this function:
   - Change MAB and PLayer values accordingly
   - Run script
   
-
+Questions:
+- How to define regret with standard deviation (best mean arm or best absolute arm?)
+- What are typical human values of alpha?
+- Utilisation of the model - explorative study structure
+- Thesis tips
 

@@ -1,5 +1,5 @@
 from Create_Team_and_MAB import create_team, create_MAB
-from Team_Choice_Probability import generate_team_choice_prob
+from Combine_Information import generate_team_choice_prob
 import numpy as np
 
 

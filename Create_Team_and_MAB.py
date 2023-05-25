@@ -1,4 +1,4 @@
-from Softmax import softmax_belief_to_prob
+from Helpers import softmax_belief_to_prob
 import numpy as np
 
 
@@ -40,9 +40,9 @@ class TeamMember:
 
     def update_beliefs(self, choice, reward):
         """ Update beliefs by incorporating the obtained reward associated with
-        the member's choice """
-        # self.belief[choice] += ((1-self.alpha)*self.belief[choice])+(self.alpha*reward)
-        self.belief[choice] += self.alpha * (reward - self.belief[choice])
+        the member's choice in accordance with exponential smoothing"""
+        self.belief[choice] = (self.alpha*reward) + ((1-self.alpha)*self.belief[choice])
+        #self.belief[choice] += self.alpha * (reward - self.belief[choice])
 
 
 class MAB:
