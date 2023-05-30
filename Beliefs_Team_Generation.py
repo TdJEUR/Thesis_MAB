@@ -1,6 +1,6 @@
 
 
-def create_team(alphas, tau, no_arms):
+def create_team_b(alphas, tau, no_arms):
     """Create a list of TeamMember objects. The verbosity of each member is
     determined by alphas (list containing alpha for each member) and the team
     exploration-exploitation strategy is determined by tau (float). The number

@@ -1,4 +1,4 @@
-from Create_Team_and_MAB import create_team, create_MAB
+from Old_Create_Team_and_MAB import create_team, create_MAB
 from Combine_Information import generate_team_choice_prob
 import numpy as np
 

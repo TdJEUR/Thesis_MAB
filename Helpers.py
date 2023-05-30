@@ -1,4 +1,33 @@
 import numpy as np
+import itertools
+
+
+def generate_combinations(size, x, y, dt):
+    # Calculate the number of steps based on the boundaries and step size
+    num_steps = int((y - x) / dt) + 1
+
+    # Create a list of all possible values for each entry in the vector
+    value_range = [x + i * dt for i in range(num_steps)]
+
+    # Generate all possible combinations using itertools.product
+    combinations = list(itertools.product(value_range, repeat=size))
+
+    # Convert each combination to a list
+    combinations = [list(comb) for comb in combinations]
+
+    return combinations
+
+
+def frange(start, stop, step):
+    """
+    Custom implementation of the range function that supports float step size.
+    """
+    i = 0
+    current = start
+    while current < stop:
+        yield current
+        i += 1
+        current = start + i * step
 
 
 def softmax_belief_to_prob(beliefs, tau):
