@@ -1,5 +1,50 @@
 import numpy as np
 import itertools
+import math
+from itertools import accumulate
+
+
+def generate_MAB_Matrix(number_of_trials, probabilities_of_success, number_of_rounds):
+    number_of_arms = len(number_of_trials)
+    best_arm = np.argmax(probabilities_of_success)
+    MAB_Matrix = np.random.binomial(n=number_of_trials,
+                                    p=probabilities_of_success,
+                                    size=[number_of_rounds, number_of_arms])
+    return MAB_Matrix, best_arm
+
+
+def diversity(float_list):
+    sorted_list = sorted(float_list)
+    differences = [abs(sorted_list[i] - sorted_list[i + 1]) for i in range(len(sorted_list) - 1)]
+    max_difference = max(differences)
+
+    if max_difference == 0:
+        normalized_differences = [0] * len(differences)
+    else:
+        normalized_differences = [diff / max_difference for diff in differences]
+
+    weighted_sum = sum([(1 - diff) * diff for diff in normalized_differences])
+
+    if weighted_sum > 0:
+        entropy = -math.log2(weighted_sum)
+    else:
+        entropy = float('1000')  # Assign a high value when weighted sum is zero or negative
+
+    return entropy
+
+
+def calculate_diversity(vector):
+    unique_elements = len(set(vector))
+    if unique_elements == 1:
+        return 0
+    elif unique_elements == 2:
+        return 0.25
+    elif unique_elements == 3:
+        return 0.5
+    elif unique_elements == 4:
+        return 0.75
+    elif unique_elements == 5:
+        return 1
 
 
 def generate_combinations(size, x, y, dt):
@@ -10,12 +55,18 @@ def generate_combinations(size, x, y, dt):
     value_range = [x + i * dt for i in range(num_steps)]
 
     # Generate all possible combinations using itertools.product
-    combinations = list(itertools.product(value_range, repeat=size))
+    combinations = list(itertools.combinations_with_replacement(value_range, size))
 
     # Convert each combination to a list
-    combinations = [list(comb) for comb in combinations]
+    combinations = [sorted(list(comb)) for comb in combinations]
 
-    return combinations
+    # Remove duplicate combinations
+    unique_combinations = list(set(map(tuple, combinations)))
+
+    # Sort combinations based on the smallest alpha value in each combination
+    sorted_combinations = sorted(unique_combinations, key=lambda comb: min(comb))
+
+    return sorted_combinations
 
 
 def frange(start, stop, step):

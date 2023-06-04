@@ -2,19 +2,14 @@ from Beliefs_Team_Generation import create_team_b
 from Helpers import vertical_avg, softmax_belief_to_prob
 from Draw_Results import plot_results_constant_tau
 from Combine_Information import generate_team_belief
-from Generate_MAB_Matrix import generate_MAB_Matrix
 import numpy as np
 import pandas as pd
 import random
 
 
-def simulate_MAB_Avg_B(MAB_Matrix, probabilities_of_success, tau, alphas, num_sims):
+def Sim_Matrix_X_Times_B(MAB_Matrix, best_arm, tau, alphas, num_sims):
     number_of_rounds = len(MAB_Matrix)
     number_of_arms = len(MAB_Matrix[0])
-    # Initialize Dataframes to return:
-    df_rewards = pd.DataFrame({'Alphas': [], 'Acc_Reward(Beliefs)': []})
-    df_regret = pd.DataFrame({'Alphas': [], 'Acc_Reg(Beliefs)': []})
-    df_rate_of_best_reward = pd.DataFrame({'Alphas': [], 'ROBR(Beliefs)': []})
     # Initialize average acc reward, average rate of best reward and average acc regret for single MAB problem:
     all_acc_rewards = []
     all_rate_of_best_rewards = []
@@ -31,7 +26,7 @@ def simulate_MAB_Avg_B(MAB_Matrix, probabilities_of_success, tau, alphas, num_si
             team = create_team_b(alpha, tau, number_of_arms)
             res = play_single_MAB_Matrix_Avg_B(MAB_Matrix=MAB_Matrix,
                                                team=team,
-                                               probabilities_of_success=probabilities_of_success,
+                                               best_arm=best_arm,
                                                number_of_rounds=number_of_rounds)
             # Add data for each strategy to current simulation data:
             acc_rewards.append(res[0])
@@ -41,23 +36,18 @@ def simulate_MAB_Avg_B(MAB_Matrix, probabilities_of_success, tau, alphas, num_si
         all_acc_rewards.append(acc_rewards)
         all_rate_of_best_rewards.append(rate_of_best_rewards)
         all_acc_regret.append(acc_regret)
-        print(f'Finished Simulation: {k}/{num_sims}, Beliefs')
+        # print(f'Finished Simulation: {k}/{num_sims}, Beliefs')
     # Average data over all simulations to obtain total average acc reward, rate of best reward and total acc regret
     avg_acc_rewards = vertical_avg(all_acc_rewards)
     avg_rate_of_best_rewards = vertical_avg(all_rate_of_best_rewards)
     avg_acc_regret = vertical_avg(all_acc_regret)
-    # Add to df:
-    for j, alpha in enumerate(alphas):
-        df_regret.loc[len(df_regret)] = [str(alpha), avg_acc_regret[j][-1]]
-        df_rewards.loc[len(df_rewards)] = [str(alpha), avg_acc_rewards[j][-1]]
-        df_rate_of_best_reward.loc[len(df_rate_of_best_reward)] = [str(alpha), avg_rate_of_best_rewards[j][-1]]
     # Plot results:
-    plot_results_constant_tau(number_of_rounds, alphas, avg_acc_rewards, avg_rate_of_best_rewards,
-                              avg_acc_regret, tau, num_sims, 1)
-    return df_rewards, df_regret, df_rate_of_best_reward
+    # plot_results_constant_tau(number_of_rounds, alphas, avg_acc_rewards, avg_rate_of_best_rewards,
+    #                           avg_acc_regret, tau, num_sims, 1)
+    return avg_acc_regret, avg_acc_rewards, avg_rate_of_best_rewards
 
 
-def play_single_MAB_Matrix_Avg_B(MAB_Matrix, team, probabilities_of_success, number_of_rounds):
+def play_single_MAB_Matrix_Avg_B(MAB_Matrix, team, best_arm, number_of_rounds):
     # Initialise results to empty lists
     total_reward = 0
     total_regret = 0
@@ -66,8 +56,7 @@ def play_single_MAB_Matrix_Avg_B(MAB_Matrix, team, probabilities_of_success, num
     rate_of_best_arm = []
     number_of_best_arm_pulls = 0
     round_number = 0
-    best_arm = probabilities_of_success.index(max(probabilities_of_success))  # Only one max arm!
-    number_of_arms = len(probabilities_of_success)
+    number_of_arms = len(MAB_Matrix[0])
     # Loop through the rounds:
     for i in range(number_of_rounds):
         # Combine beliefs:
