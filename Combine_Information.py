@@ -39,4 +39,4 @@ def generate_team_belief(team):
     # Calculate the total belief by summing the combined beliefs
     total_belief = sum(combined_belief)
     # Normalize the combined belief
-    return [belief / total_belief for belief in combined_belief]
+    return [b / total_belief for b in combined_belief]
