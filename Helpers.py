@@ -105,7 +105,6 @@ def softmax_belief_to_prob(beliefs, tau):
     return probs
 
 
-
 def vertical_avg(lst):
     """Calculates the vertical average of a three-dimensional list. Given a three-dimensional
     list `lst` of shape (num_sub_lists, num_sub_sub_lists, n), where n represents the number

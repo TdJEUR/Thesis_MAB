@@ -17,9 +17,9 @@ probabilities_of_success = 0
 # Number of Rounds: T
 number_of_rounds = 500
 # Number of Different MAB Matrices:
-num_mabs = 100
+num_mabs = 1
 # Number of simulations per MAB Matrix:
-num_sims = 1
+num_sims = 50
 # --------------------------------------------------------------------------------------------
 # Input Team Variables
 # Exploration-Exploitation Temperature: Tau
