@@ -4,7 +4,7 @@ import math
 import matplotlib.pyplot as plt
 
 
-def plot_results_constant_alphas(number_of_rounds, tau, acc_rewards, rate_of_best_rewards, acc_regret, alpha, num_sims, method):
+def plot_results_constant_alphas(number_of_rounds, tau, acc_rewards, rate_of_best_rewards, acc_regret, alpha, num_mabs, method):
     """ Create plots of the accumulated reward, accumulated regret and
     rate of choosing the best reward against the round number for
     different values of tau """
@@ -19,17 +19,17 @@ def plot_results_constant_alphas(number_of_rounds, tau, acc_rewards, rate_of_bes
         axs[0, 0].plot(range(number_of_rounds), acc_rewards[0][i], label=f'Tau: {round(tau, 2)}')
         axs[0, 0].set_xlabel('Round number')
         axs[0, 0].set_ylabel('Accumulated reward')
-        axs[0, 0].set_title(f'Accumulated reward over time | Alpha={alpha}, {num_sims} Simulations')
+        axs[0, 0].set_title(f'Accumulated reward over time | Alpha={alpha}, {num_mabs} Simulations')
         axs[0, 0].legend()
         axs[0, 1].plot(range(number_of_rounds), rate_of_best_rewards[0][i], label=f'Tau: {round(tau, 2)}')
         axs[0, 1].set_xlabel('Round number')
         axs[0, 1].set_ylabel('Rate of best rewards')
-        axs[0, 1].set_title(f'Rate of best rewards over time | Alpha={alpha}, {num_sims} Simulations')
+        axs[0, 1].set_title(f'Rate of best rewards over time | Alpha={alpha}, {num_mabs} Simulations')
         axs[0, 1].legend()
         axs[1, 0].plot(range(number_of_rounds), acc_regret[0][i], label=f'Tau: {round(tau, 2)}')
         axs[1, 0].set_xlabel('Round number')
         axs[1, 0].set_ylabel('Accumulated regret')
-        axs[1, 0].set_title(f'Accumulated regret over time | Alpha={alpha}, {num_sims} Simulations')
+        axs[1, 0].set_title(f'Accumulated regret over time | Alpha={alpha}, {num_mabs} Simulations')
         axs[1, 0].legend()
     fig.tight_layout()
     plt.draw()

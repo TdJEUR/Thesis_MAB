@@ -1,4 +1,5 @@
 import numpy as np
+from scipy.stats import ttest_ind, mannwhitneyu
 from Helpers import diversity, generate_combinations, calculate_diversity, generate_MAB_Matrix, \
     plot_results_constant_alphas
 import pandas as pd
@@ -17,13 +18,13 @@ probabilities_of_success = 0
 # Number of Rounds: T
 number_of_rounds = 250
 # Number of Different MAB Matrices:
-num_mabs = 250
+num_mabs = 1
 # Number of simulations per MAB Matrix:
 num_sims = 1
 # --------------------------------------------------------------------------------------------
 # Input Team Variables
 # Exploration-Exploitation Temperature: Tau
-taus = np.linspace(0.005, 0.05, 15)
+taus = np.linspace(0.005, 0.05, 5)
 taus = [round(tau, 4) for tau in taus]
 # Composition of Team Experiential Learning Mechanisms:
 # Option to generate all possible combinations:
@@ -124,6 +125,15 @@ df_B_final = concatenated_df_B.groupby('Alpha').mean()
 df_CP_final = concatenated_df_CP.groupby('Alpha').mean()
 df_B_final = df_B_final.sort_values('Diversity').reset_index()
 df_CP_final = df_CP_final.sort_values('Diversity').reset_index()
+# Average Similar Average Alphas
+# Group by the 'y' column and calculate the mean for 'z'
+res = []
+for tau in taus:
+    res.append(f'Tau={tau}')
+averaged_df = df_B_final.groupby('Avg_Alpha')[res].mean().reset_index()
+# Merge the averaged values with the original DataFrame on 'y'
+merged_df = pd.merge(df_B_final[['Alpha', 'Avg_Alpha']], averaged_df, on='Avg_Alpha')
+
 # Average all MABs to graph
 avg_acc_rewards_cp = np.mean(np.array(all_acc_rewards_cp), axis=0)
 avg_acc_rewards_b = np.mean(np.array(all_acc_rewards_b), axis=0)
@@ -135,15 +145,32 @@ avg_acc_regret_b = np.mean(np.array(all_acc_regret_b), axis=0)
 # Plot results (Single team)
 if len(alphas) == 1:
     plot_results_constant_alphas(number_of_rounds, taus, avg_acc_rewards_cp, avg_rate_of_best_rewards_cp,
-                                 avg_acc_regret_cp, alphas, num_sims, 0)
+                                 avg_acc_regret_cp, alphas, num_mabs, 0)
     plot_results_constant_alphas(number_of_rounds, taus, avg_acc_rewards_b, avg_rate_of_best_rewards_b,
-                                 avg_acc_regret_b, alphas, num_sims, 1)
+                                 avg_acc_regret_b, alphas, num_mabs, 1)
 
-# df_B_final.to_excel(f'C:/Users/tommo/Downloads/Thesis_MAB/Data/df_B_0.5_{num_mabs}mabs_{num_sims}sims_f.xlsx', index=False, engine='openpyxl')
-# df_CP_final.to_excel(f'C:/Users/tommo/Downloads/Thesis_MAB/Data/df_CP_0.5_{num_mabs}mabs_{num_sims}sims_f.xlsx', index=False, engine='openpyxl')
+merged_df.to_excel(f'C:/Users/tommo/Downloads/Thesis_MAB/Data/Merged_{num_mabs}mabs_{num_sims}sims_final.xlsx', index=False, engine='openpyxl')
+df_B_final.to_excel(f'C:/Users/tommo/Downloads/Thesis_MAB/Data/df_B_{num_mabs}mabs_{num_sims}sims_final.xlsx', index=False, engine='openpyxl')
+df_CP_final.to_excel(f'C:/Users/tommo/Downloads/Thesis_MAB/Data/df_CP_{num_mabs}mabs_{num_sims}sims_final.xlsx', index=False, engine='openpyxl')
 
 plt.show()
 
 # Perform Statistical Analysis
-stat_df = pd.DataFrame
+
+for tau in taus:
+    c1 = df_CP_final[f'Tau={tau}']
+    c2 = df_B_final[f'Tau={tau}']
+    t_statistic, p_value = ttest_ind(c1, c2)
+    print(f"T-Statistic: {t_statistic}, p-value: {p_value}")
+    if p_value < 0.05:
+        print("T-Statistic: The columns are statistically different.")
+    else:
+        print("T-Statistic: The columns are not statistically different.")
+    statistic, p_value = mannwhitneyu(c1, c2)
+    print(f"Mann-Whitney U statistic: {statistic}, p-value: {p_value}")
+    if p_value < 0.05:
+        print("Mann-Whitney U statistic: The columns are statistically different.")
+    else:
+        print("Mann-Whitney U statistic: The columns are not statistically different.")
+
 
