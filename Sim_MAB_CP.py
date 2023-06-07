@@ -27,6 +27,7 @@ def Sim_MAB_CP(alphas, tau, MAB_Matrix, best_arm):
         choice = np.random.choice(list(range(number_of_arms)), p=team_choice_prob)
         # Play a round depending on the choice
         reward = MAB_Matrix[i][choice]
+#        print(f'Choice: {choice}, Reward: {reward}')
         total_reward += reward
         accumulated_reward.append(total_reward)
         total_regret += max(MAB_Matrix[i]) - reward
@@ -39,4 +40,5 @@ def Sim_MAB_CP(alphas, tau, MAB_Matrix, best_arm):
             # print(f'Old beliefs: {member.belief}')
             member.update_beliefs(choice, reward)
             # print(f'New beliefs: {member.belief} \n')
+#        print(f'Finsihed round {round} \n')
     return accumulated_reward, rate_of_best_arm, accumulated_regret

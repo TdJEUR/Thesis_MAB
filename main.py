@@ -11,29 +11,29 @@ path = "C:/Users/tommo/Downloads/Thesis_MAB/Data"
 # --------------------------------------------------------------------------------------------
 # Input MAB Variables
 # Number of Arms: N
-no_arms = 10
+no_arms = 5
 # probabilities_of_success = [0.5, 0.8, 0.3, 0.5]
 probabilities_of_success = 0
 # Number of Rounds: T
-number_of_rounds = 500
+number_of_rounds = 250
 # Number of Different MAB Matrices:
-num_mabs = 1
+num_mabs = 250
 # Number of simulations per MAB Matrix:
-num_sims = 50
+num_sims = 1
 # --------------------------------------------------------------------------------------------
 # Input Team Variables
 # Exploration-Exploitation Temperature: Tau
-taus = np.linspace(0.01, 1, 6)
+taus = np.linspace(0.005, 0.05, 15)
 taus = [round(tau, 4) for tau in taus]
 # Composition of Team Experiential Learning Mechanisms:
 # Option to generate all possible combinations:
-# alphas = generate_combinations(size=5, x=0.01, y=0.22, dt=0.05)
+alphas = generate_combinations(size=5, x=0.01, y=0.22, dt=0.05)
 # Option to input teams manually:
 # alphas = [[0.1, 0.1, 0.1, 0.1],
 #           [0.1, 0.08, 0.05, 0.05],
 #           [0.15, 0.08, 0.05, 0.05],
 #           [0.15, 0.1, 0.08, 0.05]]
-alphas = [[0.05, 0.05, 0.05, 0.05, 0.05]]
+# alphas = [[0.05, 0.05, 0.05, 0.05, 0.05]]
 # --------------------------------------------------------------------------------------------
 
 # Define helper variables
@@ -139,8 +139,8 @@ if len(alphas) == 1:
     plot_results_constant_alphas(number_of_rounds, taus, avg_acc_rewards_b, avg_rate_of_best_rewards_b,
                                  avg_acc_regret_b, alphas, num_sims, 1)
 
-# df_B_final.to_excel(f'C:/Users/tommo/Downloads/Thesis_MAB/Data/df_B_0.5_{num_mabs}mabs_{num_sims}sims_x.xlsx', index=False, engine='openpyxl')
-# df_CP_final.to_excel(f'C:/Users/tommo/Downloads/Thesis_MAB/Data/df_CP_0.5_{num_mabs}mabs_{num_sims}sims_x.xlsx', index=False, engine='openpyxl')
+# df_B_final.to_excel(f'C:/Users/tommo/Downloads/Thesis_MAB/Data/df_B_0.5_{num_mabs}mabs_{num_sims}sims_f.xlsx', index=False, engine='openpyxl')
+# df_CP_final.to_excel(f'C:/Users/tommo/Downloads/Thesis_MAB/Data/df_CP_0.5_{num_mabs}mabs_{num_sims}sims_f.xlsx', index=False, engine='openpyxl')
 
 plt.show()
 

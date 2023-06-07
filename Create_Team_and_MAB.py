@@ -36,7 +36,9 @@ class TeamMember:
 
     def get_choice_probabilities(self):
         """ Convert member's beliefs to choice probabilities using Softmax """
+#        print(f'Member: {self}, belief: {self.belief}')
         self.choice_probabilities = softmax_belief_to_prob(self.belief, self.tau)
+#        print(f'Member: {self}, cp generated: {self.choice_probabilities}')
 
     def update_beliefs(self, choice, reward):
         """ Update beliefs by incorporating the obtained reward associated with
