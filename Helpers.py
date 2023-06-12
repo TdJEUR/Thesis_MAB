@@ -16,23 +16,21 @@ def plot_results_constant_alphas(number_of_rounds, tau, acc_rewards, rate_of_bes
         fig.suptitle(f'Averaging Beliefs')
     # Loop through each value of tau and create plots for each metric
     for i, tau in enumerate(tau):
-        axs[0, 0].plot(range(number_of_rounds), acc_rewards[0][i], label=f'Tau: {round(tau, 2)}')
+        axs[0, 0].plot(range(number_of_rounds), acc_rewards[0][i], label=f'Tau: {tau}')
         axs[0, 0].set_xlabel('Round number')
         axs[0, 0].set_ylabel('Accumulated reward')
         axs[0, 0].set_title(f'Accumulated reward over time | Alpha={alpha}, {num_mabs} Simulations')
         axs[0, 0].legend()
-        axs[0, 1].plot(range(number_of_rounds), rate_of_best_rewards[0][i], label=f'Tau: {round(tau, 2)}')
+        axs[0, 1].plot(range(number_of_rounds), rate_of_best_rewards[0][i], label=f'Tau: {tau}')
         axs[0, 1].set_xlabel('Round number')
         axs[0, 1].set_ylabel('Rate of best rewards')
         axs[0, 1].set_title(f'Rate of best rewards over time | Alpha={alpha}, {num_mabs} Simulations')
         axs[0, 1].legend()
-        axs[1, 0].plot(range(number_of_rounds), acc_regret[0][i], label=f'Tau: {round(tau, 2)}')
+        axs[1, 0].plot(range(number_of_rounds), acc_regret[0][i], label=f'Tau: {tau}')
         axs[1, 0].set_xlabel('Round number')
         axs[1, 0].set_ylabel('Accumulated regret')
         axs[1, 0].set_title(f'Accumulated regret over time | Alpha={alpha}, {num_mabs} Simulations')
         axs[1, 0].legend()
-    fig.tight_layout()
-    plt.draw()
 
 
 def generate_MAB_Matrix(number_of_trials, probabilities_of_success, number_of_rounds):
@@ -93,13 +91,15 @@ def generate_combinations(size, x, y, dt):
 
 def softmax_belief_to_prob(beliefs, tau):
     """ Implementation of the Softmax choice rule: Input beliefs and output choice probabilities """
-    # choice_probabilities = []
-    # # Calculate the denominator of the Softmax formula
-    # denominator = sum(np.exp(i/(tau/len(beliefs))) for i in beliefs)
-    # # Loop through each belief and calculate its corresponding choice probability
-    # for belief in beliefs:
-    #     choice_probabilities.append(round((np.exp(belief/(tau/len(beliefs)))/denominator), 10))
-    # return choice_probabilities
+    if tau == 0:
+        arr = np.array(beliefs)
+        mask = np.isclose(arr, np.max(arr), atol=1e-8)
+        max_indices = np.where(mask)[0]
+        selected_index = np.random.choice(max_indices) if max_indices.size > 0 else None
+        output = np.zeros_like(beliefs)
+        if selected_index is not None:
+            output[selected_index] = 1
+        return output.tolist()
     z = sum([math.exp(v/tau) for v in beliefs])
     probs = [math.exp(v/tau)/z for v in beliefs]
     return probs
