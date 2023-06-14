@@ -66,6 +66,10 @@ for mab in range(num_mabs):
 # Average all MABs to graph
 avg_acc_reward_cp = np.mean(np.array(all_acc_reward_cp), axis=0)
 avg_acc_reward_b = np.mean(np.array(all_acc_reward_b), axis=0)
+print(taus)
+print('B', avg_acc_reward_cp)
+print('CP', avg_acc_reward_b)
+
 
 # Plot results (Single team)
 plt.plot(taus, avg_acc_reward_b, label='Averaging Beliefs')

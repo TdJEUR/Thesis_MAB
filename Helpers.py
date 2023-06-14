@@ -2,6 +2,7 @@ import numpy as np
 import itertools
 import math
 import matplotlib.pyplot as plt
+from scipy.stats import skew
 
 
 def plot_results_constant_alphas(number_of_rounds, tau, acc_rewards, rate_of_best_rewards, acc_regret, alpha, num_mabs, method):
@@ -159,3 +160,10 @@ def plot_results_constant_tau(number_of_rounds, alphas, acc_rewards, rate_of_bes
         axs[1, 0].legend()
     fig.tight_layout()
     plt.draw()
+
+
+def calc_skew(l):
+    if all(item == l[0] for item in l):
+        return 0
+    else:
+        return skew(l)
